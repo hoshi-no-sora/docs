@@ -109,7 +109,23 @@ skeltonも変更するのが良いかも！(/etc/skel)
 #
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~ Step5. automatic service boot and restart ~~
+# ~~~ Step5. Setup the VNC Password ~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+vncpasswd
+-- [ VNC ]
+http://www.asahi-net.or.jp/~aa4t-nngk/vnc.html#vncupstart
+http://www.asahi-net.or.jp/~aa4t-nngk/vnc.html
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~ Step5. Setup the VNC Password ~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 
+#
+#
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~ Step6. automatic service boot and restart ~~
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # 自動起動(by root)
@@ -120,15 +136,19 @@ chkconfig vncserver --list
 # | # /etc/init.d/vncserver start
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~ Step5. automatic service boot and restart ~~
+# ~~~ Step6. automatic service boot and restart ~~
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 
 
 [参考URL]
 %%% IBM
 https://www.ibm.com/developerworks/jp/opensource/library/os-multiuserloginsvnc/index.html
 
-
+-- [ VNC ]
+http://www.asahi-net.or.jp/~aa4t-nngk/vnc.html#vncupstart
+http://www.asahi-net.or.jp/~aa4t-nngk/vnc.html
 
 https://www.checksite.jp/centos64-desktop-connect-vnc/
 
