@@ -1,0 +1,135 @@
+VNCに関するTips
+
+------------------------------------
+環境           : RHEL (CentOS 6.6)
+VNCデフォルトポート : 5900 + ディスプレイ番号
+------------------------------------
+#
+# === [前提知識] ====================
+# ※ディスプレイ番号は、0からでなく、1からの方が無難かも。
+# [理由] dispay number 0は Clientの X Window Systemが使用しているため。
+# ==================================
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~ Step0. Stop VNC Service ~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 停止(by root)
+# |   vncserver -kill :1
+# | # service vncserver stop
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~ Step0. Stop VNC Service ~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+#
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~ Step1. Change the VNC Deafault Port ~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+/usr/bin/vncserver内の以下の行を変更
+$vncPort = 5900 + $displayNumber; 
+5900 => 59000など
+
+--------------
+※ユーザーが自由に使って良いとされている 50000, 60000 台の数字にするのが無難
+（ただし、65536まで）。
+※VNCに関するデフォルトのPort番号を「59000 + display番号」などに変更し、
+59001などから初めるのがよいと思われる！
+--------------
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~ Step1. Change the VNC Deafault Port ~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+#
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~ Step2. Port解放(iptables) ~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+iptables などでport解放！！
+iptablesのshell scriptに、以下を必要箇所にInsert
+
+iptables -A INPUT -m state –state NEW -m tcp -p tcp –dport 59001 -j ACCEPT
+iptables -A INPUT -m state –state NEW -m udp -p udp –dport 59001 -j ACCEPT
+...
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~ Step2. Port解放(iptables) ~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+#
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~ Step3. 起動パラメータ指定 ~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+「/etc/sysconfig/vncservers」ファイルで以下の行を最後に追加
+
+===================================
+※ "[numver]:"の部分は、display番号!!!
+※ vncuser[number]はログインユーザ名(/home/[login_username])
+
+VNCSERVERS="1:vncuser1"
+VNCSERVERARGS[1]="-geometry 1024x768 -nolisten tcp"
+VNCSERVERS="2:vncuser2"
+VNCSERVERARGS[2]="-geometry 1024x768 -nolisten tcp"
+VNCSERVERS="3:vncuser3"
+VNCSERVERARGS[3]="-geometry 1024x768 -nolisten tcp"
+...
+===================================
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~ Step3. 起動パラメータ指定 ~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+#
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~ Step4.GNOMEを用いたX Session利用への変更 ~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# [GNOMEを用いたX Session利用への変更]
+${HOME}/.vnc/xstartup and /root/.vnc/xstartupファイルを以下のように変更
+==================================
+#xterm -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &
+#twm &
+#gnome-session &
+exec gnome-session
+==================================
+
+上記のように、「xtermやtwm &」をコメントアウトし、
+exec gnome-sessionを追加
+
+※※※ Recommend ※※※
+skeltonも変更するのが良いかも！(/etc/skel)
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~ Step4.GNOMEを用いたX Session利用への変更 ~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+#
+#
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~ Step5. automatic service boot and restart ~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# 自動起動(by root)
+chkconfig vncserver on
+chkconfig vncserver --list
+
+# 起動(by root)
+# | # /etc/init.d/vncserver start
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~ Step5. automatic service boot and restart ~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+[参考URL]
+%%% IBM
+https://www.ibm.com/developerworks/jp/opensource/library/os-multiuserloginsvnc/index.html
+
+
+
+https://www.checksite.jp/centos64-desktop-connect-vnc/
+
+
