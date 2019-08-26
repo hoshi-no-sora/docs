@@ -1,9 +1,10 @@
 VNCに関するTips
 
-------------------------------------
+---------------------------------------------------
 環境           : RHEL (CentOS 6.6)
-VNCデフォルトポート : 5900 + ディスプレイ番号
-------------------------------------
+VNC Server     : TigerVNC (※RealVNC Serverでは構成が違い、うまく接続できそうになかった)
+VNCデフォルトポート : 5900 + ディスプレイ番号 => 59000 + display numberに変更
+---------------------------------------------------
 #
 # === [前提知識] ====================
 # ※ディスプレイ番号は、0からでなく、1からの方が無難かも。
@@ -90,7 +91,7 @@ VNCSERVERARGS[3]="-geometry 1024x768 -nolisten tcp"
 # [GNOMEを用いたX Session利用への変更]
 ${HOME}/.vnc/xstartup and /root/.vnc/xstartupファイルを以下のように変更
 ==================================
-#xterm -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" &
+xterm -geometry 80x24+10+10 -ls -title "$VNCDESKTOP Desktop" & <= この行がコメントアウトされていると接続時に黒画面にバツ印のカーソルがClient側に表示されるだけ！
 #twm &
 #gnome-session &
 exec gnome-session
@@ -140,6 +141,16 @@ chkconfig vncserver --list
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Windows Client
+
+RealVNC導入
+[IP Address]:[Port Number]
+で接続可能！
 
 
 [参考URL]
